@@ -318,6 +318,78 @@ voxels = {
             "y" : 3,
             "z" : 0
         }
+    },
+    "4" : {
+        "part" : "3005",
+        "position" : {
+            "x" : -1,
+            "y" : 3,
+            "z" : 0
+        }
+    },
+    "5" : {
+        "part" : "3005",
+        "position" : {
+            "x" : -1,
+            "y" : 6,
+            "z" : 0
+        }
+    },
+    "6" : {
+        "part" : "3005",
+        "position" : {
+            "x" : -1,
+            "y" : 9,
+            "z" : 0
+        }
+    },
+    "7" : {
+        "part" : "3005",
+        "position" : {
+            "x" : -2,
+            "y" : 9,
+            "z" : 0
+        }
+    },
+    "8" : {
+        "part" : "3005",
+        "position" : {
+            "x" : -2,
+            "y" : 12,
+            "z" : 0
+        }
+    },
+    "9" : {
+        "part" : "3005",
+        "position" : {
+            "x" : -1,
+            "y" : 12,
+            "z" : 0
+        }
+    },
+    "10" : {
+        "part" : "3005",
+        "position" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 1
+        }
+    },
+    "11" : {
+        "part" : "3005",
+        "position" : {
+            "x" : 0,
+            "y" : -3,
+            "z" : 1
+        }
+    },
+    "12" : {
+        "part" : "3005",
+        "position" : {
+            "x" : 1,
+            "y" : -3,
+            "z" : 1
+        }
     }
 }
 
@@ -328,6 +400,8 @@ def makeSlope():
         down = False
 
         side = False
+
+        empty = True
         
         for w in voxels:
             wcords = voxels[w]["position"]
@@ -336,8 +410,10 @@ def makeSlope():
                 down = inbo(down)
             elif wcords["x"] == vcords["x"] + 1 and wcords["y"] == vcords["y"] - 3 and wcords["z"] == vcords["z"]:
                 side = inbo(side)
+            elif wcords["x"] == vcords["x"] + 1 and wcords["y"] == vcords["y"] and wcords["z"] == vcords["z"]:
+                empty = inbo(empty)
             
-            if down and side == True:
+        if down == True and side == True and empty == True:
                 voxels[v]["part"] = "3040"
 
 makeSlope()
