@@ -1,2 +1,2 @@
-# LegoGen
-A lego build generator, to be turned into a lego-lizer with slopes
+# Legolizer
+A branch off of the lego gen, using its base functions to convert voxel data to lego bricks with slopes.
