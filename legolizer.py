@@ -286,25 +286,64 @@ def placePart(p, c, x, y, z, m):
     outputText = "1 " + str(c) + " " + str(x * 20) + " " + str(-y * 8) + " " + str(z * 20) + " " + m + " " + p + ".dat" + "\n"
     return outputText
 
+def inbo(inv):
+    if inv == True:
+        inv = False
+    else:
+        inv = True
+    return inv
+
 voxels = {
     "1" : {
-        "x" : 0,
-        "y" : 0,
-        "z" : 0
+        "part" : "3005",
+        "position" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+        }
+        
     },
     "2" : {
-        "x" : 1,
-        "y" : 0,
-        "z" : 0
+        "part" : "3005",
+        "position" : {
+            "x" : 1,
+            "y" : 0,
+            "z" : 0
+        }
     },
     "3" : {
-        "x" : 0,
-        "y" : 3,
-        "z" : 0
+        "part" : "3005",
+        "position" : {
+            "x" : 0,
+            "y" : 3,
+            "z" : 0
+        }
     }
 }
 
+def makeSlope():
+    for v in voxels:
+        vcords = voxels[v]["position"]
+        
+        down = False
+
+        side = False
+        
+        for w in voxels:
+            wcords = voxels[w]["position"]
+
+            if wcords["x"] == vcords["x"] and wcords["y"] == vcords["y"] - 3 and wcords["z"] == vcords["z"]:
+                down = inbo(down)
+            elif wcords["x"] == vcords["x"] + 1 and wcords["y"] == vcords["y"] - 3 and wcords["z"] == vcords["z"]:
+                side = inbo(side)
+            
+            if down and side == True:
+                voxels[v]["part"] = "3040"
+
+makeSlope()
+
+#Basic function to create a 1x1 for every voxel.
 for v in voxels:
-    textOutput += placePart("3005", 4, voxels[v]["x"], voxels[v]["y"], voxels[v]["z"], "1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0")
+    textOutput += placePart(voxels[v]["part"], 4, voxels[v]["position"]["x"], voxels[v]["position"]["y"], voxels[v]["position"]["z"], "0.0 0.0 -1.0 0.0 1.0 0.0 1.0 0.0 0.0")
 
 ldrOutput.write(textOutput)
