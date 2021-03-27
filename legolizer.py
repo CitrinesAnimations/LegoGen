@@ -293,7 +293,13 @@ def inbo(inv):
         inv = True
     return inv
 
-voxels = {
+voxels = {}
+
+with open('voxels.txt') as json_file:
+    data = json.load(json_file)
+    voxels = data
+
+voxels2 = {
     "1" : {
         "part" : "3005",
         "position" : {
