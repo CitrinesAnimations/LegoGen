@@ -283,6 +283,28 @@ partList = {
 def placePart(p, c, x, y, z, m):
     #Part id, colour id, x, y, z, matrix ^^
     #1 + colour id + x + y + z + matrix + part id
-    outputText = "1 " + str(c) + " " + str(x) + " " + str(y) + " " + str(z) + " " + m + " " + p + ".dat" + "\n"
+    outputText = "1 " + str(c) + " " + str(x * 20) + " " + str(-y * 8) + " " + str(z * 20) + " " + m + " " + p + ".dat" + "\n"
     return outputText
 
+voxels = {
+    "1" : {
+        "x" : 0,
+        "y" : 0,
+        "z" : 0
+    },
+    "2" : {
+        "x" : 1,
+        "y" : 0,
+        "z" : 0
+    },
+    "3" : {
+        "x" : 0,
+        "y" : 3,
+        "z" : 0
+    }
+}
+
+for v in voxels:
+    textOutput += placePart("3005", 4, voxels[v]["x"], voxels[v]["y"], voxels[v]["z"], "1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0")
+
+ldrOutput.write(textOutput)
