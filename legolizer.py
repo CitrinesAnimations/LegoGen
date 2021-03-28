@@ -299,11 +299,11 @@ slopeList = {
         "brick" : {
             "1" : {
                 "s" : 0,
-                "h" : -1
+                "h" : 3
             },
             "2" : {
                 "s" : 1,
-                "h" : -1
+                "h" : 3
             }
         },
         "empty" : {
@@ -329,12 +329,20 @@ def inbo(inv):
         inv = True
     return inv
 
-def fabo(inv):
-    if inv == True:
-        inv = False
+def fabo(yep, base):
+    if yep == False:
+        base = False
     else:
-        inv = False
-    return inv
+        base = base
+    return base
+
+def pobo(yep, base):
+    if yep == True:
+        base = False
+    else:
+        base = base
+    return base
+    
 
 voxels = {}
 
@@ -344,16 +352,21 @@ with open('voxels.txt') as json_file:
     voxels = data
 
 def checkSide(vx, vz, wx, wz, s):
-    sp = []
+    sp = {
+        "px" : False,
+        "nx" : False,
+        "pz" : False,
+        "nz" : False
+    }
 
     if wx == (vx + s):
-        sp.append(s)
+        sp["px"] = True
     if wx == (vx - s):
-        sp.append(-s)
+        sp["nx"] = True
     if wz == (vz + s):
-        sp.append(s)
+        sp["pz"] = True
     if wz == (vz - s):
-        sp.append(-s)
+        sp["nz"] = True
     
     return sp
 
@@ -365,24 +378,33 @@ def makeSlope(slopeType):
         if voxels[v]["part"] == "3005":
             #1Brick position
             vcords = voxels[v]["position"]
+            
+            bg = {
+                "px" : True,
+                "nx" : True,
+                "pz" : True,
+                "nz" : True
+            }
 
-            bg = True
+            ofset = slopeList[slopeType]
 
-            for b in slopeList[slopeType]["brick"]:
-                slopeList[slopeType]["brick"][b]
-                for w in voxels:
-                    if voxels[w]["part"] != "air":
-                        wcords = voxels[w]["position"]
-                        
-                        if wcords["y"] == vcords["y"] + slopeList[slopeType]["brick"][b]["h"]:
-                            posi = checkSide(vcords["x"], vcords["z"], wcords["x"], wcords["z"], slopeList[slopeType]["brick"][b]["s"])
-                            print (posi)
+            for w in voxels:
+                    wcords = voxels[w]["position"]
+                    
+
 
 
 makeSlope("3040")
 
 #Basic function to create a 1x1 for every voxel.
-#for v in voxels:
-#    textOutput += placePart(voxels[v]["part"], 4, voxels[v]["position"]["x"], voxels[v]["position"]["y"], voxels[v]["position"]["z"], "0.0 0.0 -1.0 0.0 1.0 0.0 1.0 0.0 0.0")
+for v in voxels:
+    rot = "0.0 0.0 -1.0 0.0 1.0 0.0 1.0 0.0 0.0"
+    if voxels[v].get("rotation") is not None:
+        rot = voxels[v]["rotation"]
+    
+    textOutput += placePart(voxels[v]["part"], 4, voxels[v]["position"]["x"], voxels[v]["position"]["y"], voxels[v]["position"]["z"], rot)
+    
+    
 
-#drOutput.write(textOutput)
+print("done")
+ldrOutput.write(textOutput)
