@@ -299,11 +299,11 @@ slopeList = {
         "brick" : {
             "1" : {
                 "s" : 0,
-                "h" : 3
+                "h" : -3
             },
             "2" : {
                 "s" : 1,
-                "h" : 3
+                "h" : -3
             }
         },
         "empty" : {
@@ -330,19 +330,17 @@ def inbo(inv):
     return inv
 
 def fabo(yep, base):
-    if yep == False:
-        base = False
-    else:
-        base = base
+    if base == True:
+        base = yep
     return base
 
 def pobo(yep, base):
     if yep == True:
         base = False
-    else:
-        base = base
     return base
     
+
+voxelc = {}
 
 voxels = {}
 
@@ -350,25 +348,21 @@ voxels = {}
 with open('voxels.txt') as json_file:
     data = json.load(json_file)
     voxels = data
+    voxelc = data
 
-def checkSide(vx, vz, wx, wz, s):
-    sp = {
-        "px" : False,
-        "nx" : False,
-        "pz" : False,
-        "nz" : False
-    }
-
-    if wx == (vx + s):
-        sp["px"] = True
-    if wx == (vx - s):
-        sp["nx"] = True
-    if wz == (vz + s):
-        sp["pz"] = True
-    if wz == (vz - s):
-        sp["nz"] = True
-    
-    return sp
+def checkSide(vx, vy, vz, wx, wy, wz, s, da, sett):
+    for bi in da:
+        if wy == (vy + s[bi]["h"]):
+            if s[bi]["s"] != 0:
+                if (wx == (vx + s[bi]["s"])) and (wz == vz):
+                    da[bi]["px"] = sett
+                if (wx == (vx - s[bi]["s"])) and (wz == vz):
+                    da[bi]["nx"] = sett
+                if (wz == (vz + s[bi]["s"])) and (wx == vx):
+                    da[bi]["pz"] = sett
+                if (wz == (vz - s[bi]["s"])) and (wx == vx):
+                    da[bi]["nz"] = sett
+    return da
 
 
 def makeSlope(slopeType):
@@ -380,17 +374,125 @@ def makeSlope(slopeType):
             vcords = voxels[v]["position"]
             
             bg = {
+                "px" : False,
+                "nx" : False,
+                "pz" : False,
+                "nz" : False
+            }
+
+            bgs = {
                 "px" : True,
                 "nx" : True,
                 "pz" : True,
                 "nz" : True
             }
 
+            checkbrick = {}
+
+            checkempty = {}
+
+
             ofset = slopeList[slopeType]
 
+            for bi in ofset["brick"]:
+                checkbrick[bi] = bg
+            for ni in ofset["empty"]:
+                checkempty[ni] = bgs
+
             for w in voxels:
-                    wcords = voxels[w]["position"]
+                wcords = voxels[w]["position"]
+                if voxels[w]["part"] != "air":
+                    posi = checkSide(vcords["x"], vcords["y"], vcords["z"], wcords["x"], wcords["y"], wcords["z"], slopeList[slopeType]["brick"], checkbrick, True)
+                    checkbrick = posi
+                posis = checkSide(vcords["x"], vcords["y"], vcords["z"], wcords["x"], wcords["y"], wcords["z"], slopeList[slopeType]["empty"], checkempty, False)
+                checkempty = posis
+
+            
+            px = True
+
+            nx = True
+
+            pz = True
+
+            nz = True
+            
+            for cg in checkbrick:
+
+                if checkbrick[cg]["px"] == False:
+                    px = False
+                if checkbrick[cg]["nx"] == False:
+                    nx = False
+                if checkbrick[cg]["pz"] == False:
+                    pz = False
+                if checkbrick[cg]["nz"] == False:
+                    nz = False
+
+
+            for cgi in checkempty:
+
+                if checkempty[cgi]["px"] == False:
+                    px = False
+                if checkempty[cgi]["nx"] == False:
+                    nx = False
+                if checkempty[cgi]["pz"] == False:
+                    pz = False
+                if checkempty[cgi]["nz"] == False:
+                    nz = False
+            
+            ava = []
+
+            chos = ""
+
+            if px == True:
+                ava.append("px")
+            if nx == True:
+                ava.append("nx")
+            if pz == True:
+                ava.append("pz")
+            if nz == True:
+                ava.append("nz")
+
+
+            if len(ava) != 0:
+                chos = random.choice(ava)
+                if chos == "px":
+                    countt = str(random.randrange(5000, 10000))
                     
+                    iposition = {}
+
+                    iposition["x"] = vcords["x"] + 1
+
+                    iposition["y"] = vcords["y"]
+
+                    iposition["z"] = vcords["z"]
+                    
+                    idata = {}
+
+                    idata["part"] = "air"
+                    idata["position"] = iposition
+
+                    voxels[countt] = idata
+
+
+                    voxels[v]["part"] = "3040"
+                    voxels[v]["rotation"] = "0 0 -1 0 1 0 1 0 0"
+                if chos == "nx":
+                    voxels[v]["part"] = "3040"
+                    voxels[v]["rotation"] = "0 0 1 0 1 0 -1 0 0"
+                if chos == "nz":
+                    voxels[v]["part"] = "3040"
+                    voxels[v]["rotation"] = "1 0 0 0 1 0 0 0 1"
+                if chos == "pz":
+                    voxels[v]["part"] = "3040"
+                    voxels[v]["rotation"] = "-1 0 0 0 1 0 0 0 -1"
+
+        
+            
+
+
+            
+            
+            
 
 
 
